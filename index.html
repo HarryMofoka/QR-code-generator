@@ -4,705 +4,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #a8d5e2;
-            --secondary: #fda7a7;
-            --accent: #b4a7d6;
-            --background: #fef6f9;
-            --card-bg: #ffffff;
-            --text: #2d3436;
-            --text-light: #636e72;
-            --shadow: rgba(0, 0, 0, 0.1);
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--background) 0%, #f0f4ff 100%);
-            min-height: 100vh;
-            color: var(--text);
-        }
-
-        nav {
-            background: var(--card-bg);
-            padding: 1.5rem 2rem;
-            box-shadow: 0 2px 10px var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-weight: 500;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: var(--text);
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .hero {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            color: var(--text-light);
-            font-size: 1.1rem;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px var(--shadow);
-            transition: transform 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h2 {
-            color: var(--text);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        input[type="text"],
-        input[type="url"] {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e1e8ed;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-            background: #f8f9fa;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: white;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-        }
-
-        .btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 5px 15px var(--shadow);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        #qrResult {
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        #qrCode {
-            display: inline-block;
-            padding: 1rem;
-            background: white;
-            border-radius: 12px;
-            margin: 1rem 0;
-        }
-
-        #qrCode img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .download-btn {
-            background: linear-gradient(135deg, var(--secondary), var(--accent));
-            margin-top: 1rem;
-        }
-
-        .history-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .history-item {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.3s;
-        }
-
-        .history-item:hover {
-            background: #e9ecef;
-        }
-
-        .history-text {
-            flex: 1;
-            word-break: break-all;
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .history-time {
-            font-size: 0.75rem;
-            color: var(--text-light);
-            margin-top: 0.5rem;
-        }
-
-        .regenerate-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            margin-left: 1rem;
-        }
-
-        .regenerate-btn:hover {
-            opacity: 0.9;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-light);
-        }
-
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .about-content {
-            line-height: 1.8;
-        }
-
-        .about-content h3 {
-            color: var(--accent);
-            margin: 2rem 0 1rem 0;
-        }
-
-        .about-content p {
-            margin-bottom: 1rem;
-            color: var(--text-light);
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, rgba(168, 213, 226, 0.1), rgba(180, 167, 214, 0.1));
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 2px solid #e1e8ed;
-        }
-
-        .feature-card h4 {
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-card p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--card-bg);
-                flex-direction: column;
-                padding: 1rem;
-                gap: 1rem;
-                box-shadow: 0 5px 10px var(--shadow);
-                display: none;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav>
+    <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">QR Generator</div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#" data-section="generate">Generate</a></li>
-                <li><a href="#" data-section="history">History</a></li>
-                <li><a href="#" data-section="about">About</a></li>
-            </ul>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="nav-brand">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>QR Generator</span>
             </div>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#generator">Generator</a></li>
+                <li><a href="#history">History</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="hero">
-            <h1>Generate Your QR Code</h1>
-            <p>Transform any link into a scannable QR code instantly</p>
-        </div>
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero" id="generator">
+            <h1 class="hero-title">Create Your QR Code</h1>
+            <p class="hero-subtitle">Transform any link into a scannable QR code in seconds</p>
+        </section>
 
-        <div class="main-content">
-            <!-- Generate Section -->
-            <div class="section active" id="generateSection">
-                <div class="card">
-                    <h2>Create QR Code</h2>
-                    <div class="input-group">
+        <!-- QR Generator Section -->
+        <section class="generator-section">
+            <div class="card">
+                <form id="qrForm" class="qr-form">
+                    <div class="form-group">
                         <label for="urlInput">Enter your URL</label>
-                        <input type="url" id="urlInput" placeholder="https://example.com">
+                        <input 
+                            type="url" 
+                            id="urlInput" 
+                            placeholder="https://example.com" 
+                            required
+                            class="url-input"
+                        >
                     </div>
-                    <button class="btn" onclick="generateQR()">Generate QR Code</button>
-                    
-                    <div id="qrResult"></div>
-                </div>
-            </div>
-
-            <!-- History Section -->
-            <div class="section" id="historySection">
-                <div class="card">
-                    <h2>Recent Sessions</h2>
-                    <div class="history-list" id="historyList">
-                        <div class="empty-state">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2v20M2 12h20"/>
-                            </svg>
-                            <p>No history yet. Generate your first QR code!</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="qrSize">QR Code Size</label>
+                        <select id="qrSize" class="size-select">
+                            <option value="200">Small (200x200)</option>
+                            <option value="300" selected>Medium (300x300)</option>
+                            <option value="400">Large (400x400)</option>
+                        </select>
                     </div>
-                </div>
-            </div>
-
-            <!-- About Section -->
-            <div class="section" id="aboutSection">
-                <div class="card">
-                    <h2>About QR Generator</h2>
-                    <div class="about-content">
-                        <p>Welcome to QR Generator - your simple and efficient tool for creating QR codes instantly! Transform any URL into a scannable QR code that can be used for sharing links, marketing materials, business cards, and more.</p>
-
-                        <h3>Features</h3>
-                        <div class="feature-grid">
-                            <div class="feature-card">
-                                <h4>🚀 Instant Generation</h4>
-                                <p>Create QR codes in seconds with our fast and reliable API</p>
-                            </div>
-                            <div class="feature-card">
-                                <h4>💾 Session History</h4>
-                                <p>Access your previously generated QR codes anytime</p>
-                            </div>
-                            <div class="feature-card">
-                                <h4>📱 Fully Responsive</h4>
-                                <p>Works perfectly on desktop, tablet, and mobile devices</p>
-                            </div>
-                            <div class="feature-card">
-                                <h4>⬇️ Easy Download</h4>
-                                <p>Download your QR codes as high-quality PNG images</p>
-                            </div>
-                            <div class="feature-card">
-                                <h4>🆓 Completely Free</h4>
-                                <p>No registration required, unlimited QR code generation</p>
-                            </div>
-                            <div class="feature-card">
-                                <h4>🎨 Modern Design</h4>
-                                <p>Beautiful, intuitive interface with smooth animations</p>
-                            </div>
-                        </div>
-
-                        <h3>How to Use</h3>
-                        <p><strong>1.</strong> Enter your URL in the input field (make sure to include http:// or https://)</p>
-                        <p><strong>2.</strong> Click the "Generate QR Code" button or press Enter</p>
-                        <p><strong>3.</strong> Your QR code will appear instantly</p>
-                        <p><strong>4.</strong> Click "Download QR Code" to save it to your device</p>
-                        <p><strong>5.</strong> Access your previous QR codes in the History section</p>
-
-                        <h3>Use Cases</h3>
-                        <p>QR codes are versatile and can be used for:</p>
-                        <p>• <strong>Business Cards:</strong> Link to your website or portfolio</p>
-                        <p>• <strong>Marketing:</strong> Promotional materials and advertisements</p>
-                        <p>• <strong>Events:</strong> Easy access to registration or information pages</p>
-                        <p>• <strong>Menus:</strong> Contactless restaurant menus</p>
-                        <p>• <strong>Social Media:</strong> Quick links to your profiles</p>
-                        <p>• <strong>Education:</strong> Share learning resources with students</p>
-
-                        <h3>Technology</h3>
-                        <p>This application uses the free QR Server API to generate high-quality QR codes. All data is processed securely, and your URLs are only used to create the QR codes you request.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ============================================
-        // LOCALSTORAGE IMPLEMENTATION
-        // ============================================
-        // This will work in your own environment
-        
-        const STORAGE_KEY = 'qr_generator_history';
-
-        // Load history from localStorage
-        function loadHistoryFromStorage() {
-            try {
-                const stored = localStorage.getItem(STORAGE_KEY);
-                return stored ? JSON.parse(stored) : [];
-            } catch (error) {
-                console.error('Error loading from localStorage:', error);
-                return [];
-            }
-        }
-
-        // Save history to localStorage
-        function saveHistoryToStorage(history) {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
-            }
-        }
-
-        // Initialize history from localStorage
-        let sessionHistory = loadHistoryFromStorage();
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', () => {
-            updateHistoryDisplay();
-            showSection('generate');
-        });
-
-        // ============================================
-        // NAVIGATION
-        // ============================================
-
-        // Hamburger menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
-
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
-
-        // Navigation handling
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const section = link.getAttribute('data-section');
-                showSection(section);
-                hamburger.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
-        });
-
-        // Show specific section
-        function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-
-            // Show selected section
-            const sectionMap = {
-                'generate': 'generateSection',
-                'history': 'historySection',
-                'about': 'aboutSection'
-            };
-
-            const sectionId = sectionMap[sectionName];
-            if (sectionId) {
-                document.getElementById(sectionId).classList.add('active');
-            }
-
-            // Update history display when viewing history section
-            if (sectionName === 'history') {
-                updateHistoryDisplay();
-            }
-        }
-
-        // ============================================
-        // QR CODE GENERATION
-        // ============================================
-
-        // Generate QR Code using QR Server API (free)
-        function generateQR() {
-            const url = document.getElementById('urlInput').value.trim();
-            const qrResult = document.getElementById('qrResult');
-
-            if (!url) {
-                alert('Please enter a URL');
-                return;
-            }
-
-            // Validate URL
-            try {
-                new URL(url);
-            } catch (e) {
-                alert('Please enter a valid URL (including http:// or https://)');
-                return;
-            }
-
-            // Generate QR code using api.qrserver.com (free API)
-            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
-
-            qrResult.innerHTML = `
-                <div id="qrCode">
-                    <img src="${qrApiUrl}" alt="QR Code">
-                </div>
-                <button class="btn download-btn" onclick="downloadQR('${qrApiUrl}', '${url}')">Download QR Code</button>
-            `;
-
-            // Add to history
-            addToHistory(url, qrApiUrl);
-            
-            // Show the generate section
-            showSection('generate');
-        }
-
-        // ============================================
-        // HISTORY MANAGEMENT
-        // ============================================
-
-        // Add to session history and localStorage
-        function addToHistory(url, qrUrl) {
-            const timestamp = new Date().toLocaleString();
-            const historyItem = {
-                url: url,
-                qrUrl: qrUrl,
-                timestamp: timestamp
-            };
-
-            sessionHistory.unshift(historyItem);
-            
-            // Keep only last 10 items
-            if (sessionHistory.length > 10) {
-                sessionHistory = sessionHistory.slice(0, 10);
-            }
-
-            // Save to localStorage
-            saveHistoryToStorage(sessionHistory);
-
-            updateHistoryDisplay();
-        }
-
-        // Update history display
-        function updateHistoryDisplay() {
-            const historyList = document.getElementById('historyList');
-            
-            if (sessionHistory.length === 0) {
-                historyList.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M2 12h20"/>
+                    <button type="submit" class="btn btn-primary">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
-                        <p>No history yet. Generate your first QR code!</p>
+                        Generate QR Code
+                    </button>
+                </form>
+            </div>
+
+            <!-- QR Code Display -->
+            <div class="qr-result" id="qrResult" style="display: none;">
+                <div class="card">
+                    <h3>Your QR Code</h3>
+                    <div class="qr-display">
+                        <img id="qrImage" src="" alt="QR Code">
                     </div>
-                `;
-                return;
-            }
-
-            historyList.innerHTML = sessionHistory.map((item, index) => `
-                <div class="history-item">
-                    <div>
-                        <div class="history-text">${item.url}</div>
-                        <div class="history-time">${item.timestamp}</div>
+                    <div class="qr-info">
+                        <p class="qr-url" id="qrUrl"></p>
+                        <p class="qr-date" id="qrDate"></p>
                     </div>
-                    <button class="regenerate-btn" onclick="regenerateFromHistory(${index})">View</button>
+                    <button class="btn btn-secondary" id="downloadBtn">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download QR Code
+                    </button>
                 </div>
-            `).join('');
-        }
+            </div>
+        </section>
 
-        // Regenerate QR from history
-        function regenerateFromHistory(index) {
-            const item = sessionHistory[index];
-            document.getElementById('urlInput').value = item.url;
-            
-            const qrResult = document.getElementById('qrResult');
-            qrResult.innerHTML = `
-                <div id="qrCode">
-                    <img src="${item.qrUrl}" alt="QR Code">
+        <!-- History Section -->
+        <section class="history-section" id="history">
+            <div class="section-header">
+                <h2>Previous Sessions</h2>
+                <button class="btn btn-clear" id="clearHistoryBtn">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Clear History
+                </button>
+            </div>
+            <div class="history-grid" id="historyGrid">
+                <p class="empty-state">No previous sessions yet. Generate your first QR code!</p>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section" id="about">
+            <div class="card">
+                <h2>About This Tool</h2>
+                <p>This QR code generator allows you to quickly convert any URL into a scannable QR code. All your sessions are saved locally in your browser, ensuring your privacy.</p>
+                <div class="features">
+                    <div class="feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        <h4>Privacy First</h4>
+                        <p>All data stored locally</p>
+                    </div>
+                    <div class="feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <h4>Instant Generation</h4>
+                        <p>Create QR codes in seconds</p>
+                    </div>
+                    <div class="feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <h4>Easy Download</h4>
+                        <p>Download in PNG format</p>
+                    </div>
                 </div>
-                <button class="btn download-btn" onclick="downloadQR('${item.qrUrl}', '${item.url}')">Download QR Code</button>
-            `;
+            </div>
+        </section>
+    </main>
 
-            // Scroll to generate section
-            document.getElementById('generate').scrollIntoView({ behavior: 'smooth' });
-            showSection('generate');
-        }
+    <footer class="footer">
+        <p>&copy; 2025 QR Generator. Free & Open Source.</p>
+    </footer>
 
-        // ============================================
-        // DOWNLOAD & UTILITY
-        // ============================================
-
-        // Download QR code
-        async function downloadQR(qrUrl, originalUrl) {
-            try {
-                const response = await fetch(qrUrl);
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `qrcode-${Date.now()}.png`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            } catch (error) {
-                alert('Error downloading QR code. Please try again.');
-            }
-        }
-
-        // Allow Enter key to generate QR
-        document.getElementById('urlInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                generateQR();
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
